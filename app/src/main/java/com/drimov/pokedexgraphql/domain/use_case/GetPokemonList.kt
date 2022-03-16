@@ -9,8 +9,8 @@ class GetPokemonList(
     private val repository: PokemonRepository
 ) {
     suspend operator fun invoke(
-        generation: String,
-        language: String,
+        generation: Int,
+        language: Int,
         orderBy: String
     ): Flow<Resource<Generation>> {
         return repository.getPokemonList(generation, language, orderBy)

@@ -1,5 +1,6 @@
 package com.drimov.pokedexgraphql.di
 
+import com.drimov.pokedexgraphql.data.local.PokedexDatabase
 import com.drimov.pokedexgraphql.data.remote.GraphQLApolloClient
 import com.drimov.pokedexgraphql.data.repository.PokemonRepositoryImpl
 import com.drimov.pokedexgraphql.domain.repository.PokemonRepository
@@ -17,8 +18,11 @@ object PokemonModule {
 
     @Provides
     @Singleton
-    fun providePokemonRepository(api: GraphQLApolloClient): PokemonRepository {
-        return PokemonRepositoryImpl(api)
+    fun providePokemonRepository(
+        api: GraphQLApolloClient,
+        database: PokedexDatabase
+    ): PokemonRepository {
+        return PokemonRepositoryImpl(api, database.pokemonDao)
     }
 
     @Provides

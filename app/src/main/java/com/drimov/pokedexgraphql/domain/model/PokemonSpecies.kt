@@ -5,12 +5,11 @@ data class PokemonSpecies(
     val url: String,
     val baseHappiness: Int?,
     val captureRate: Int?,
-    val growRate: List<GrowRateDescription>,
-    val color: String,
+    val growthRate: List<GrowthRate>,
     val eggGroups: List<EggGroup>,
-    val habitats: List<Habitat>,
+    val habitats: List<Habitat>?,
     val pokemons: List<Pokemon>,
-    val shapes: List<Shape>,
+    val shapes: List<Shape>?,
     val flavorTexts: List<FlavorText>,
     val names: List<Names>
 )

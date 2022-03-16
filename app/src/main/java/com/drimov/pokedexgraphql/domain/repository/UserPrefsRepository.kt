@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserPrefsRepository {
 
-    suspend fun putStringPrefs(key: String,value: String)
-    suspend fun getStringPrefs(key: String): Flow<Resource<String?>>
+    suspend fun putStringPrefs(key: String,value: Int)
+    fun getStringPrefs(key: String): Flow<Resource<Int?>>
 }

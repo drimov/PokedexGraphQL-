@@ -5,7 +5,7 @@ import com.drimov.pokedexgraphql.domain.repository.UserPrefsRepository
 class PutStringPrefs(
     private val repository: UserPrefsRepository
 ) {
-    suspend operator fun invoke(key: String, value: String) {
+    suspend operator fun invoke(key: String, value: Int) {
         repository.putStringPrefs(key, value)
     }
 }

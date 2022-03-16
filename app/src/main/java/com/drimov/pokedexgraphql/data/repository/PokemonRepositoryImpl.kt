@@ -1,8 +1,11 @@
 package com.drimov.pokedexgraphql.data.repository
 
+import com.apollographql.apollo3.exception.ApolloException
+import com.drimov.pokedexgraphql.data.local.dao.PokemonDao
+import com.drimov.pokedexgraphql.data.local.entity.GenerationEntity
+import com.drimov.pokedexgraphql.data.local.entity.PokemonSpeciesEntity
 import com.drimov.pokedexgraphql.data.remote.GraphQLApolloClient
-import com.drimov.pokedexgraphql.data.toDomainDomain
-import com.drimov.pokedexgraphql.data.toDomainModel
+import com.drimov.pokedexgraphql.data.toEntity
 import com.drimov.pokedexgraphql.domain.model.Generation
 import com.drimov.pokedexgraphql.domain.model.PokemonSpecies
 import com.drimov.pokedexgraphql.domain.repository.PokemonRepository
@@ -14,12 +17,13 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 
 class PokemonRepositoryImpl(
-    private val api: GraphQLApolloClient
+    private val api: GraphQLApolloClient,
+    private val pokemonDao: PokemonDao
 ) : PokemonRepository {
 
-    override suspend fun getPokemonList(
-        generation: String,
-        language: String,
+    override fun getPokemonList(
+        generation: Int,
+        language: Int,
         orderBy: String
     ): Flow<Resource<Generation>> = flow {
         emit(Resource.Loading())
@@ -31,16 +35,18 @@ class PokemonRepositoryImpl(
                 orderBy = order_by.valueOf(orderBy)
             )
 
-            val listPokemon: Generation = result.data!!.toDomainDomain()
-            emit(Resource.Success(listPokemon))
+            val genPokemon: GenerationEntity = result.data!!.toEntity()
+            pokemonDao.insertGeneration(genPokemon)
+            val genList = pokemonDao.getPokemonGen(generation).toDomainModel()
+            emit(Resource.Success(genList))
 
-        } catch (e: HttpException) {
+        } catch (e: ApolloException) {
             emit(Resource.Error<Generation>(message = Constants.httpExceptionErr))
         }
 
     }
 
-    override suspend fun getPokemonInfo(id: Int, language: String): Flow<Resource<PokemonSpecies>> =
+    override fun getPokemonInfo(id: Int, language: Int): Flow<Resource<PokemonSpecies>> =
         flow {
 
             emit(Resource.Loading<PokemonSpecies>())
@@ -50,10 +56,12 @@ class PokemonRepositoryImpl(
                     id = id,
                     language = language
                 )
-                val pokemonInfo: PokemonSpecies = result.data!!.toDomainModel()
-                emit(Resource.Success(pokemonInfo))
+                val pokemon: PokemonSpeciesEntity = result.data!!.toEntity()
+                pokemonDao.insertPokemon(pokemon)
+                val pokemoInfo = pokemonDao.getPokemon(id).toDomainModel()
+                emit(Resource.Success(pokemoInfo))
 
-            } catch (e: HttpException) {
+            } catch (e: ApolloException) {
                 emit(Resource.Error<PokemonSpecies>(message = Constants.httpExceptionErr))
             }
         }

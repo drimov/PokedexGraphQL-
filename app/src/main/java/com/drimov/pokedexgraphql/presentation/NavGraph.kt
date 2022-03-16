@@ -36,7 +36,7 @@ fun SetupNavGraph(
                     type = NavType.IntType
                 },
                 navArgument(name = "language") {
-                    type = NavType.StringType
+                    type = NavType.IntType
                 }
             )
         ) {

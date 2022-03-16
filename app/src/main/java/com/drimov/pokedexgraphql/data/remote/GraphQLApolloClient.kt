@@ -11,8 +11,8 @@ class GraphQLApolloClient(
 ) {
 
     suspend fun getPokemonList(
-        generation: String,
-        language: String,
+        generation: Int,
+        language: Int,
         orderBy: order_by
     ): ApolloResponse<PokemonListQuery.Data> =
         apolloClient.query(
@@ -25,7 +25,7 @@ class GraphQLApolloClient(
 
     suspend fun getPokemonInfo(
         id: Int,
-        language: String
+        language: Int
     ): ApolloResponse<PokemonInfoQuery.Data> =
         apolloClient.query(
             PokemonInfoQuery(

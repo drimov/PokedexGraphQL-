@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetPokemonInfo(
     private val repository: PokemonRepository
 ) {
-    suspend operator fun invoke(id: Int, language: String): Flow<Resource<PokemonSpecies>> {
+    operator fun invoke(id: Int, language: Int): Flow<Resource<PokemonSpecies>> {
         return repository.getPokemonInfo(id, language)
     }
 }

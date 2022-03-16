@@ -22,8 +22,9 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.drimov.pokedexgraphql.R
-import com.drimov.pokedexgraphql.presentation.ui.theme.Grey200
 import com.drimov.pokedexgraphql.domain.model.PokemonEntry
+import com.drimov.pokedexgraphql.util.numberToIndex
+import com.drimov.pokedexgraphql.util.typeToColor
 
 @Composable
 fun PokemonInfoScreen(
@@ -37,13 +38,13 @@ fun PokemonInfoScreen(
             .clip(RoundedCornerShape(25.dp))
             .clickable {
                 viewModel.onEvent(
-                    PokedexListEvent.OnPokemonClick(
+                    PokemonListEvent.OnPokemonClick(
                         id,
                         viewModel.language.value
                     )
                 )
             },
-        backgroundColor = Grey200
+        backgroundColor = typeToColor(pokedexListEntry.color)
     ) {
         Row {
             ImagePokemon(entry = pokedexListEntry)
@@ -103,7 +104,7 @@ fun IdPokemon(
             .fillMaxSize()
     ) {
         Text(
-            text = id.toString(),
+            text = numberToIndex(id),
             modifier = modifier
                 .align(BottomEnd)
                 .padding(horizontal = 16.dp)

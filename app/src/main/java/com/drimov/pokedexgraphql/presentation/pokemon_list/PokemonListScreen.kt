@@ -26,8 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.drimov.pokedexgraphql.R
 import com.drimov.pokedexgraphql.presentation.ui.theme.Blue700
 import com.drimov.pokedexgraphql.presentation.ui.theme.Red200
-import com.drimov.pokedexgraphql.util.Constants
-import com.drimov.pokedexgraphql.util.UiEvent
+import com.drimov.pokedexgraphql.util.*
+import com.drimov.pokedexgraphql.util.Constants.nbGen
 import kotlinx.coroutines.flow.collect
 import java.util.*
 
@@ -53,11 +53,11 @@ fun PokemonListScreen(
     val scaffoldState = rememberScaffoldState()
     var expandedGen by remember { mutableStateOf(false) }
     var expandedLanguage by remember { mutableStateOf(false) }
-    var genLoad: String by rememberSaveable { mutableStateOf("") }
+    var genLoad: Int by rememberSaveable { mutableStateOf(1) }
 //    val currentLanguage by remember { mutableStateOf(viewModel.language) }
     val currentLanguage = viewModel.language.collectAsState()
 
-    SetLanguage(language = currentLanguage.value)
+    SetLanguage(language = numberToLanguage(currentLanguage.value))
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -116,15 +116,14 @@ fun DropMenuLoad(
     onDismissRequest: () -> Unit,
     viewModel: PokemonListViewModel,
 ) {
-    val listLanguages = mapOf<String, String>(
-        "en" to stringResource(id = R.string.eng_language),
-        "es" to stringResource(id = R.string.es_language),
-        "fr" to stringResource(id = R.string.fr_language),
-        "it" to stringResource(id = R.string.it_language),
-        "ja" to stringResource(id = R.string.ja_language),
-        "ko" to stringResource(id = R.string.ko_language),
-
-        )
+    val listLanguages = mapOf<Int, String>(
+        9 to stringResource(id = R.string.eng_language),
+        7 to stringResource(id = R.string.es_language),
+        5 to stringResource(id = R.string.fr_language),
+        8 to stringResource(id = R.string.it_language),
+        1 to stringResource(id = R.string.ja_language),
+        3 to stringResource(id = R.string.ko_language),
+    )
 
     Box(modifier = modifier, contentAlignment = Alignment.TopStart) {
         DropdownMenu(
@@ -137,7 +136,7 @@ fun DropMenuLoad(
                 DropdownMenuItem(
                     onClick = {
                         viewModel.onEvent(
-                            PokedexListEvent.OnLanguageClick(entry.key)
+                            PokemonListEvent.OnLanguageClick(entry.key)
                         )
                     }) {
                     Text(
@@ -158,7 +157,7 @@ fun DropMenuGen(
     modifier: Modifier,
     onDismissRequest: () -> Unit,
     viewModel: PokemonListViewModel,
-    genLoad: (String) -> Unit
+    genLoad: (Int) -> Unit
 ) {
 
     Box(modifier = modifier, contentAlignment = Alignment.TopStart) {
@@ -168,24 +167,24 @@ fun DropMenuGen(
             modifier = modifier
                 .background(Blue700),
         ) {
-//            for (i in 1..nbGen) {
-//                val gen = parseNbToRomanNb(i)
-//                val genParse = parseGeneration(gen)
-//                DropdownMenuItem(
-//                    onClick = {
+            for (i in 1..nbGen) {
+                val gen = nbToRomanNb(i)
+                val genParse = parseGeneration(gen)
+                DropdownMenuItem(
+                    onClick = {
 //                        genLoad(genParse)
-//                        viewModel.onEvent(
-//                            PokedexListEvent.OnGenerationClick(genParse)
-//                        )
-//                    }) {
-//                    Text(
-//                        text = gen,
-//                        color = Color.White,
-//                        textAlign = TextAlign.Center,
-//                        modifier = modifier.fillMaxWidth()
-//                    )
-//                }
-//            }
+                        viewModel.onEvent(
+                            PokemonListEvent.OnGenerationClick(genParse)
+                        )
+                    }) {
+                    Text(
+                        text = gen,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }
@@ -239,7 +238,7 @@ fun HandleState(
     modifier: Modifier,
     state: PokedexListInfoState,
     viewModel: PokemonListViewModel,
-    gen: String?
+    gen: Int?
 ) {
     if (state.isLoading) {
         Box(
@@ -273,7 +272,7 @@ fun HandleState(
             Box(modifier = modifier.align(Alignment.CenterHorizontally)) {
                 val retry = stringResource(id = R.string.retry)
                 Button(
-                    onClick = { viewModel.onEvent(PokedexListEvent.OnReload(gen)) }
+                    onClick = { viewModel.onEvent(PokemonListEvent.OnReload(gen)) }
                 ) {
                     Text(text = retry)
                 }

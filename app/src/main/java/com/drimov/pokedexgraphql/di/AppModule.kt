@@ -1,7 +1,10 @@
 package com.drimov.pokedexgraphql.di
 
+import android.app.Application
+import androidx.room.Room
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
+import com.drimov.pokedexgraphql.data.local.PokedexDatabase
 import com.drimov.pokedexgraphql.data.remote.GraphQLApolloClient
 import com.drimov.pokedexgraphql.util.Constants.BASE_URL
 import dagger.Module
@@ -19,9 +22,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
-         return ApolloClient.Builder()
-             .serverUrl(BASE_URL)
-             .okHttpClient(okHttpClient).build()
+        return ApolloClient.Builder()
+            .serverUrl(BASE_URL)
+            .okHttpClient(okHttpClient).build()
     }
 
     @Provides
@@ -37,6 +40,17 @@ object AppModule {
     @Singleton
     fun provideGraphQLApolloClient(apolloClient: ApolloClient): GraphQLApolloClient {
         return GraphQLApolloClient(apolloClient = apolloClient)
+    }
+
+    @Provides
+    @Singleton
+    fun providePokedexDatabase(app: Application): PokedexDatabase {
+        return Room.databaseBuilder(
+            app,
+            PokedexDatabase::class.java,
+            PokedexDatabase.DB_NAME
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
 }
