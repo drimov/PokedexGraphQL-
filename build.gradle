@@ -3,6 +3,7 @@ buildscript {
         compose_version = '1.0.1'
         retrofit_version = '2.9.0'
         okhttp_version = '4.9.0'
+        room_version = '2.4.2'
         accompnist_version = '0.20.3'
     }
     dependencies {

@@ -1,51 +1,38 @@
-query PokemonInfo ($id: Int!, $language: String!){
-    pokemon_v2_pokemonspecies(where: { id: {_eq: $id}}) {
+query PokemonInfo($id: Int!, $language: Int!) {
+    pokemon_v2_pokemonspecies(where: {id: {_eq: $id}}) {
         id
-        pokemon_v2_pokemoncolor {
-            name
-        }
-        pokemon_v2_pokemonspeciesnames(
-            where: { pokemon_v2_language: { name:{_eq: $language}} }
-        ) {
+        pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: $language}}) {
             name
             genus
         }
-        pokemon_v2_pokemonspeciesflavortexts(
-            limit: 1
-            where: { pokemon_v2_language: { name: {_eq: $language}} }
-        ) {
+        pokemon_v2_pokemonspeciesflavortexts(limit: 1, where: {language_id: {_eq: $language}}) {
             flavor_text
         }
         pokemon_v2_pokemonegggroups {
             pokemon_v2_egggroup {
-                pokemon_v2_egggroupnames(
-                    where: { pokemon_v2_language: { name: {_eq: $language}} }
-                ) {
+                pokemon_v2_egggroupnames(where: {language_id: {_eq: $language}}) {
                     name
                 }
             }
         }
         pokemon_v2_pokemonhabitat {
-            pokemon_v2_pokemonhabitatnames(
-                where: { pokemon_v2_language: { name:  {_eq: $language}} }
-            ) {
+            pokemon_v2_pokemonhabitatnames {
                 name
+                language_id
             }
         }
         pokemon_v2_pokemonshape {
-            pokemon_v2_pokemonshapenames(
-                where: { pokemon_v2_language: { name:  {_eq: $language}} }
-            ) {
+            pokemon_v2_pokemonshapenames {
                 name
+                language_id
             }
         }
         base_happiness
         capture_rate
         pokemon_v2_growthrate {
-            pokemon_v2_growthratedescriptions(
-                where: { pokemon_v2_language: { name:  {_eq: $language}} }
-            ) {
+            pokemon_v2_growthratedescriptions {
                 description
+                language_id
             }
         }
         pokemon_v2_pokemons {
@@ -58,7 +45,7 @@ query PokemonInfo ($id: Int!, $language: String!){
             }
             pokemon_v2_pokemonstats {
                 pokemon_v2_stat {
-                    pokemon_v2_statnames(where: { pokemon_v2_language: { name:  {_eq: $language}} }) {
+                    pokemon_v2_statnames(where: {language_id: {_eq: $language}}) {
                         name
                     }
                 }
@@ -66,9 +53,7 @@ query PokemonInfo ($id: Int!, $language: String!){
             }
             pokemon_v2_pokemonabilities {
                 pokemon_v2_ability {
-                    pokemon_v2_abilitynames(
-                        where: { pokemon_v2_language: { name:  {_eq: $language}} }
-                    ) {
+                    pokemon_v2_abilitynames(where: {language_id: {_eq: $language}}) {
                         name
                     }
                 }
@@ -76,6 +61,7 @@ query PokemonInfo ($id: Int!, $language: String!){
         }
     }
 }
+
 
 #{
 #"id": {

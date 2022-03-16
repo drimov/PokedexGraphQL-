@@ -1,28 +1,20 @@
-query PokemonList ($generation: String!,$language: String!,$order:order_by!){
-    pokemon_v2_generationname(
-        where: { pokemon_v2_generation: { name:  {_eq : $generation}}  }
-    ) {
+query PokemonList($generation: Int!, $language: Int!, $order: order_by!) {
+    pokemon_v2_generationname(where: {pokemon_v2_generation: {id: {_eq: $generation}}}) {
         pokemon_v2_generation {
-            pokemon_v2_pokemonspecies(order_by: [{ id: $order}]) {
+            pokemon_v2_pokemonspecies(order_by: [{id: $order}]) {
                 id
-                pokemon_v2_pokemonspeciesnames(
-                    where: { pokemon_v2_language: { name: {_eq : $language} } }
-                ) {
+                pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: $language}}) {
                     name
                 }
-                pokemon_v2_pokemoncolor {
-                    name
+                pokemon_v2_pokemons {
+                    pokemon_v2_pokemontypes {
+                        pokemon_v2_type {
+                            name
+                        }
+                    }
                 }
             }
         }
+        generation_id
     }
 }
-#{
-#"generation": {
-#"_eq": "generation-i"
-#},
-#"language": {
-#"_eq": "fr"
-#},
-#"order": "asc"
-#}

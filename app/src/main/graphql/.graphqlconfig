@@ -1,6 +1,6 @@
 {
   "name": "PokeAPi GraphQL Schema",
-  "schemaPath": "schema.graphqls",
+  "schemaPath": "schema.json",
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
