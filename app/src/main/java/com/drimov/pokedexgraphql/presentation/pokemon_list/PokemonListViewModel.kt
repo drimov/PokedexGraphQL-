@@ -50,6 +50,7 @@ class PokemonListViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Navigate(Routes.POKEMON_INFO + "?id=${event.id}?language=${event.language}"))
             }
             is PokemonListEvent.OnGenerationClick -> {
+                _generation.value = event.gen
                 onLoadPokemonList(event.gen, _language.value)
             }
             is PokemonListEvent.OnLanguageClick -> {
